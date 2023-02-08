@@ -7,37 +7,63 @@ import haxe.Log;
 
 class Ball extends FlxSprite
 {
-	private var z:Float = 100;
+	private var z:Float = 2;
 	private var zSpeed:Float = 1;
 
 	private var target:FlxPoint;
 
-	public function new(_x:Float = 0, _y:Float = 0, minTargetX:Float = 0, minTargetY:Float = 0, maxTargetX:Float = 100, maxTargetY:Float = 100)
+	private var size:Int = 100;
+
+	public function new(_x:Float = 0, _y:Float = 0, _z:Float = 10)
 	{
 		var _width:Int = 100;
-		var _height:Int = 100;
+		var _width:Int = 100;
 
-		super(_x - Std.int(_width / 2), _y - Std.int(_height / 2));
+		var _size:Int = 100;
+		// 500
+		// var _scale:Float = this.z = _z;
 
-		target = new FlxPoint(randomNumber(minTargetY, maxTargetY), randomNumber(minTargetY, maxTargetY)); // Replace with Ball Graphic
+		this.target = new FlxPoint((FlxG.width / 2) - Std.int(_size / 2), Std.int(FlxG.height / 2) - Std.int(_size / 2));
 
-		makeGraphic(_width, _height, FlxColor.RED);
+		super(_x, _y);
 
-		this.kill();
+		// makeGraphic(Std.int(_size * _z), Std.int(_size * _z), FlxColor.RED);
+		makeGraphic(_size, _size, FlxColor.RED);
+		// this.kill();
+
+		var _duration:Float = _z / zSpeed / 5;
+
+		/*
+			FlxTween.tween(this, {
+				x: this.target.x,
+				y: this.target.y,
+				"scale.x": 0.5,
+				"scale.y": 0.5
+			}, _duration);
+			// */
 	}
 
-	override public function revive()
+	public function setTarget(_x:Float, _y:Float):FlxPoint
 	{
-		// velocity.x = 200;
+		var _target:FlxPoint = new FlxPoint(_x - Std.int(this.size / 2), _y - Std.int(this.size / 2));
+
+		this.target = _target;
+
+		return _target;
+	}
+
+	public function kick(_x:Float, _y:Float)
+	{
+		this.setTarget(_x, _y);
+
+		var _duration:Float = 2;
 
 		FlxTween.tween(this, {
-			x: target.x,
-			y: target.y,
+			x: this.target.x,
+			y: this.target.y,
 			"scale.x": 0.5,
 			"scale.y": 0.5
-		}, 2);
-
-		super.revive();
+		}, _duration);
 	}
 
 	private function randomNumber(_min:Float, _max:Float)
@@ -51,16 +77,19 @@ class Ball extends FlxSprite
 
 		if (z > 0)
 		{
-			Log.trace("Z:" + this.z);
+			// Log.trace("elapsed:" + elapsed);
 
 			// this.scale.set(Std.int(this.z / 10) + 1, Std.int(this.z / 10) + 1);
-			this.z -= zSpeed;
+			this.z -= elapsed * zSpeed;
 		}
 		else
 		{
-			Log.trace("Goal");
+			// Log.trace("Goal");
 			// this.scale.set(1, 1);
-			this.destroy();
+			// this.destroy();
+
+			Log.trace("Ball Killed");
+			this.kill();
 		}
 	}
 }

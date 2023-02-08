@@ -10,7 +10,8 @@ class Net extends FlxSprite
 		super(_x - Std.int(_width / 2), _y - Std.int(_height / 2));
 
 		// Replace with Net Graphic
-		makeGraphic(_width, _height, FlxColor.WHITE);
+		makeGraphic(_width, _height, FlxColor.TRANSPARENT);
+		// loadGraphic("assets/images/net1.png", false, 800, 800);
 
 		Log.trace("Net (" + this.x + "," + this.y + "),(" + this.getBottomCorner().x + "," + this.getBottomCorner().y + ")");
 	}
