@@ -3,6 +3,7 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxSignal;
 import haxe.Log;
 
 class Ball extends FlxSprite
@@ -14,12 +15,15 @@ class Ball extends FlxSprite
 
 	private var size:Int = 100;
 
+	private var signal:FlxSignal;
+
 	public function new(_x:Float = 0, _y:Float = 0, _z:Float = 10)
 	{
 		var _width:Int = 100;
 		var _width:Int = 100;
 
 		var _size:Int = 100;
+
 		// 500
 		// var _scale:Float = this.z = _z;
 
@@ -28,8 +32,12 @@ class Ball extends FlxSprite
 		super(_x, _y);
 
 		// makeGraphic(Std.int(_size * _z), Std.int(_size * _z), FlxColor.RED);
-		makeGraphic(_size, _size, FlxColor.RED);
-		// this.kill();
+		// makeGraphic(_size, _size, FlxColor.RED);
+
+		loadGraphic("assets/images/ball.png", true, _size, _size);
+
+		animation.add("spin", [0, 1, 2]);
+		///this.kill();
 
 		var _duration:Float = _z / zSpeed / 5;
 
@@ -41,6 +49,13 @@ class Ball extends FlxSprite
 				"scale.y": 0.5
 			}, _duration);
 			// */
+
+		// signal = new FlxSignal();
+	}
+
+	public function setSignal(_signal:FlxSignal)
+	{
+		this.signal = _signal;
 	}
 
 	public function setTarget(_x:Float, _y:Float):FlxPoint
@@ -58,11 +73,13 @@ class Ball extends FlxSprite
 
 		var _duration:Float = 2;
 
+		animation.play("spin");
+
 		FlxTween.tween(this, {
 			x: this.target.x,
 			y: this.target.y,
-			"scale.x": 0.5,
-			"scale.y": 0.5
+			"scale.x": 0.35,
+			"scale.y": 0.35
 		}, _duration);
 	}
 
@@ -84,11 +101,11 @@ class Ball extends FlxSprite
 		}
 		else
 		{
-			// Log.trace("Goal");
-			// this.scale.set(1, 1);
-			// this.destroy();
+			this.signal.dispatch();
 
-			Log.trace("Ball Killed");
+			Log.trace("Signal Sent");
+			// Log.trace("Ball Killed");
+			// Log.trace("Ball Killed");
 			this.kill();
 		}
 	}

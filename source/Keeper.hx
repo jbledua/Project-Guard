@@ -22,7 +22,19 @@ class Keeper extends FlxSprite
 		super(_x - Std.int(_width / 2), _y - Std.int(_height / 2));
 
 		// Replace with Keeper Graphic
-		makeGraphic(_width, _height, FlxColor.BLUE);
+		// makeGraphic(_width, _height, FlxColor.BLUE);
+
+		loadGraphic("assets/images/keeper.png", true, 200, 225);
+		animation.add("idle", [0]);
+		animation.add("idle-catch", [1]);
+		animation.add("jump", [2]);
+		animation.add("jump-catch", [3]);
+		animation.add("block-left", [6]);
+		animation.add("dive-right", [7]);
+		animation.add("block-right", [4]);
+		animation.add("dive-right", [5]);
+
+		animation.play("idle");
 
 		// Set
 		this.acceleration.y = gravity;
@@ -39,6 +51,8 @@ class Keeper extends FlxSprite
 		else
 		{
 			this.falling = true;
+
+			animation.play("jump");
 			Log.trace("Jumping");
 			// this.y = this.y - moveSpeed;
 			this.velocity.y = jumpSpeed;
@@ -55,6 +69,7 @@ class Keeper extends FlxSprite
 		this.velocity.y = 0;
 		this.acceleration.y = 0;
 
+		animation.play("idle");
 		Log.trace("Landed ");
 
 		if (rotated != 0)
@@ -73,7 +88,8 @@ class Keeper extends FlxSprite
 
 			if (this.falling)
 			{
-				this.rotateLeft();
+				animation.play("block-left");
+				// this.rotateLeft();
 			}
 		}
 	}
@@ -87,7 +103,8 @@ class Keeper extends FlxSprite
 
 			if (this.falling)
 			{
-				this.rotateRight();
+				animation.play("block-right");
+				// this.rotateRight();
 			}
 		}
 	}
